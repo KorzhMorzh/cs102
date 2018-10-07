@@ -10,6 +10,15 @@ def encrypt_caesar(plaintext):
     ''
     """
     # PUT YOUR CODE HERE
+    word = [i for i in plaintext]
+    ciphertext = ''
+    for i in range(len(word)):
+        code_of_simbol = ord(word[i])
+        if 65 <= code_of_simbol <= 87 or 97 <= code_of_simbol <= 119:
+            word[i] = chr(code_of_simbol + 3)
+        elif 88 <= code_of_simbol <= 90 or 120 <= code_of_simbol <= 122:
+            word[i] = chr(code_of_simbol - 23)
+        ciphertext += word[i]
     return ciphertext
 
 
