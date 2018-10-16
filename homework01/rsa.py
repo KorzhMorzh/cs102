@@ -1,3 +1,6 @@
+import random
+
+
 def is_prime(n):
     """
     >>> is_prime(2)
@@ -9,7 +12,7 @@ def is_prime(n):
     """
     # PUT YOUR CODE HERE
     dividers = 0
-    for i in range(1,n):
+    for i in range(1, n):
         if n % i == 0:
             dividers += 1
     if dividers == 1:
@@ -31,6 +34,31 @@ def gcd(a, b):
         else:
             b = b - a
     return a
+
+
+def multiplicative_inverse(e, phi):
+    """
+    >>> multiplicative_inverse(7, 40)
+    23
+    """
+    a = [phi]
+    b = [e]
+    a_mod_b = [phi % e]
+    a_div_b = [phi // e]
+    x = [0]
+    y = [1]
+    i = 0
+    while a[i] % b[i] != 0:
+        a.append(b[i])
+        b.append(a_mod_b[i])
+        a_mod_b.append(a[i + 1] % b[i + 1])
+        a_div_b.append(a[i+1] // b[i+1])
+        i += 1
+    for j in range(1, len(a)):
+        x.append(y[j-1])
+        y.append(x[j-1] - y[j-1]*a_div_b[len(a)-j-1])
+    d = y[len(a)-1] % phi
+    return d
 
 
 def generate_keypair(p, q):
@@ -58,8 +86,3 @@ def generate_keypair(p, q):
     # Return public and private keypair
     # Public key is (e, n) and private key is (d, n)
     return ((e, n), (d, n))
-
-
-
-
-
