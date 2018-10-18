@@ -1,7 +1,5 @@
-def encrypt_caesar(plaintext):
+def encrypt_caesar(plaintext: str) -> str: 
     """
-    Encrypt the message with Caesar cipher
-    
     >>> encrypt_caesar("PYTHON")
     'SBWKRQ'
     >>> encrypt_caesar("python")
@@ -23,7 +21,7 @@ def encrypt_caesar(plaintext):
     return ciphertext
 
 
-def decrypt_caesar(ciphertext):
+def decrypt_caesar(ciphertext: str) -> str:
     """
     Decrypt the message with Caesar cipher
     >>> decrypt_caesar("SBWKRQ")
