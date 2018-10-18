@@ -61,7 +61,7 @@ def multiplicative_inverse(e: int, phi: int) -> int:
     return d
 
 
-def generate_keypair(p: int, q: int) -> int:
+def generate_keypair(p: int, q: int) -> tuple:
     if not (is_prime(p) and is_prime(q)):
         raise ValueError('Both numbers must be prime.')
     elif p == q:
