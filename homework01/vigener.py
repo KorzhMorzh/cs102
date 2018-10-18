@@ -1,4 +1,4 @@
-def encrypt_vigenere(plaintext, keyword):
+def encrypt_vigenere(plaintext: str, keyword: str) -> str:
     """
     >>> encrypt_vigenere("PYTHON", "A")
     'PYTHON'
@@ -7,7 +7,6 @@ def encrypt_vigenere(plaintext, keyword):
     >>> encrypt_vigenere("ATTACKATDAWN", "LEMON")
     'LXFOPVEFRNHR'
     """
-    # PUT YOUR CODE HERE
     word = [i for i in plaintext]
     keys = [i for i in keyword*(len(plaintext)//len(keyword)+1)]
     ciphertext = ''
@@ -26,7 +25,7 @@ def encrypt_vigenere(plaintext, keyword):
     return ciphertext
 
 
-def decrypt_vigenere(ciphertext, keyword):
+def decrypt_vigenere(ciphertext: str, keyword: str) -> str:
     """
     >>> decrypt_vigenere("PYTHON", "A")
     'PYTHON'
@@ -35,7 +34,6 @@ def decrypt_vigenere(ciphertext, keyword):
     >>> decrypt_vigenere("LXFOPVEFRNHR", "LEMON")
     'ATTACKATDAWN'
     """
-    # PUT YOUR CODE HERE
     word = [i for i in ciphertext]
     keys = [i for i in keyword * (len(ciphertext) // len(keyword) + 1)]
     ciphertext = ''
