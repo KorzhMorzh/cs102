@@ -139,3 +139,33 @@ def find_empty_positions(grid: list) -> tuple:
         return q, w
     else:
         return 'Свободных позиций ', 'нет'
+
+
+def find_possible_values(grid: list, pos: tuple) -> list:
+    """ Вернуть множество всех возможных значения для указанной позиции
+    >>> grid = read_sudoku('puzzles/puzzle1.txt')
+    >>> values = find_possible_values(grid, (0,2))
+    >>> set(values) == {'1', '2', '4'}
+    True
+    >>> values = find_possible_values(grid, (4,7))
+    >>> set(values) == {'2', '5', '9'}
+    True
+    """
+    values = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
+    possible_values = []
+    row = get_row(grid, pos)
+    col = get_col(grid, pos)
+    block = get_block(grid, pos)
+    for i in values:
+        if i in row:
+            continue
+        elif i in col:
+            continue
+        elif i in block:
+            continue
+        else:
+            possible_values.append(i)
+    return possible_values
+
+
+
