@@ -23,7 +23,7 @@ def group(values: list, n: int) -> list:
     return l
 
 
-def display(values):
+def display(values: list):
     """Вывод Судоку """
     width = 2
     line = '+'.join(['-' * (width * 3)] * 3)
@@ -113,3 +113,29 @@ def get_block(values: list, pos: tuple) -> list:
                 for w in range(6, 9):
                     l.append(values[q][w])
     return l
+
+
+def find_empty_positions(grid: list) -> tuple:
+    """ Найти первую свободную позицию в пазле
+
+    >>> find_empty_positions([['1', '2', '.'], ['4', '5', '6'], ['7', '8', '9']])
+    (0, 2)
+    >>> find_empty_positions([['1', '2', '3'], ['4', '.', '6'], ['7', '8', '9']])
+    (1, 1)
+    >>> find_empty_positions([['1', '2', '3'], ['4', '5', '6'], ['.', '8', '9']])
+    (2, 0)
+    """
+    q = -1
+    w = -1
+    for i in range(len(grid)):
+        for j in range(len(grid)):
+            if grid[i][j] == '.':
+                q = i
+                w = j
+                break
+        if q >= 0 & w >= 0:
+            break
+    if q >= 0 & w >= 0:
+        return q, w
+    else:
+        return 'Свободных позиций ', 'нет'
