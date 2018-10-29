@@ -14,13 +14,13 @@ def group(values: list, n: int) -> list:
     >>> group([1,2,3,4,5,6,7,8,9], 3)
     [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
     """
-    l = [[0 for j in range(n)] for i in range(n)]
+    matrix = [[j - i for j in range(n)] for i in range(n)]  # Данная строка нужна для генерациии непустого списка
     index = 0
     for i in range(n):
         for j in range(n):
-            l[i][j] = values[index]
+            matrix[i][j] = values[index]
             index += 1
-    return l
+    return matrix
 
 
 def display(values: list):
@@ -44,9 +44,9 @@ def get_row(values: list, pos: tuple) -> list:
     >>> get_row([['1', '2', '3'], ['4', '5', '6'], ['.', '8', '9']], (2, 0))
     ['.', '8', '9']
     """
-    i = pos[0]
-    l = values[i]
-    return l
+    i = int(pos[0])
+    row = values[i]
+    return row
 
 
 def get_col(values: list, pos: tuple) -> list:
@@ -60,10 +60,10 @@ def get_col(values: list, pos: tuple) -> list:
     ['3', '6', '9']
     """
     j = pos[1]
-    l = []
+    col = []
     for i in range(len(values)):
-        l.append(values[i][j])
-    return l
+        col.append(values[i][j])
+    return col
 
 
 def get_block(values: list, pos: tuple) -> list:
@@ -76,43 +76,43 @@ def get_block(values: list, pos: tuple) -> list:
     >>> get_block(grid, (8, 8))
     ['2', '8', '.', '.', '.', '5', '.', '7', '9']
     """
-    l = []
+    block = []
     i = pos[0]
     j = pos[1]
     if i < 3:
         for q in range(3):
             if j < 3:
                 for w in range(3):
-                    l.append(values[q][w])
+                    block.append(values[q][w])
             elif j < 6:
                 for w in range(3, 6):
-                    l.append(values[q][w])
+                    block.append(values[q][w])
             elif j < 9:
                 for w in range(6, 9):
-                    l.append(values[q][w])
+                    block.append(values[q][w])
     elif i < 6:
         for q in range(3, 6):
             if j < 3:
                 for w in range(3):
-                    l.append(values[q][w])
+                    block.append(values[q][w])
             elif j < 6:
                 for w in range(3, 6):
-                    l.append(values[q][w])
+                    block.append(values[q][w])
             elif j < 9:
                 for w in range(6, 9):
-                    l.append(values[q][w])
+                    block.append(values[q][w])
     elif i < 9:
         for q in range(6, 9):
             if j < 3:
                 for w in range(3):
-                    l.append(values[q][w])
+                    block.append(values[q][w])
             elif j < 6:
                 for w in range(3, 6):
-                    l.append(values[q][w])
+                    block.append(values[q][w])
             elif j < 9:
                 for w in range(6, 9):
-                    l.append(values[q][w])
-    return l
+                    block.append(values[q][w])
+    return block
 
 
 def find_empty_positions(grid: list) -> tuple:
@@ -138,7 +138,7 @@ def find_empty_positions(grid: list) -> tuple:
     if q >= 0 & w >= 0:
         return q, w
     else:
-        return 'Свободных позиций ', 'нет'
+        return -1, -1
 
 
 def find_possible_values(grid: list, pos: tuple) -> list:
@@ -168,4 +168,25 @@ def find_possible_values(grid: list, pos: tuple) -> list:
     return possible_values
 
 
-
+def solve(grid):
+    """ Решение пазла, заданного в grid """
+    """ 
+    >>> grid = read_sudoku('puzzle1.txt')
+    >>> solve(grid)
+    [['5', '3', '4', '6', '7', '8', '9', '1', '2'], ['6', '7', '2', '1', '9', '5', '3', '4', '8'], ['1', '9', '8', '3', 
+    '4', '2', '5', '6', '7'], ['8', '5', '9', '7', '6', '1', '4', '2', '3'], ['4', '2', '6', '8', '5', '3', '7', '9', 
+    '1'], ['7', '1', '3', '9', '2', '4', '8', '5', '6'], ['9', '6', '1', '5', '3', '7', '2', '8', '4'], ['2', '8', '7', 
+    '4', '1', '9', '6', '3', '5'], ['3', '4', '5', '2', '8', '6', '1', '7', '9']]
+    """
+    pos = find_empty_positions(grid)
+    if pos[0] == -1:
+        return grid
+    row, col = pos
+    possible_values = find_possible_values(grid, pos)
+    for value in possible_values:
+        grid[row][col] = value
+        solution = solve(grid)
+        if solution:
+            return solution
+    grid[row][col] = '.'
+    return None
