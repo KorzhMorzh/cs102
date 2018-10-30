@@ -23,7 +23,7 @@ def group(values: list, n: int) -> list:
     return matrix
 
 
-def display(values: list):
+def display(values: list) -> None:
     """Вывод Судоку """
     width = 2
     line = '+'.join(['-' * (width * 3)] * 3)
@@ -168,7 +168,7 @@ def find_possible_values(grid: list, pos: tuple) -> list:
     return possible_values
 
 
-def solve(grid):
+def solve(grid: list) -> list:
     """ Решение пазла, заданного в grid """
     """ 
     >>> grid = read_sudoku('puzzle1.txt')
@@ -181,12 +181,31 @@ def solve(grid):
     pos = find_empty_positions(grid)
     if pos[0] == -1:
         return grid
-    row, col = pos
+    i, j = pos
     possible_values = find_possible_values(grid, pos)
     for value in possible_values:
-        grid[row][col] = value
-        solution = solve(grid)
+        grid[i][j] = value
+        solution: list = solve(grid)
         if solution:
             return solution
-    grid[row][col] = '.'
+    grid[i][j] = '.'
     return None
+
+
+def check_solution(solution: list) -> bool:
+    """ Если решение solution верно, то вернуть True, в противном случае False """
+    check = set('123456789')
+    for i in range(len(solution)):
+        col = set(get_col(solution, (0, i)))
+        if col != check:
+            return False
+    for j in range(len(solution)):
+        row = set(get_row(solution, (j, 0)))
+        if row != check:
+            return False
+    for q in range(0, 9, 3):
+        for w in range(0, 9, 3):
+            block = set(get_block(solution, (q, w)))
+            if block != check:
+                return False
+    return True
