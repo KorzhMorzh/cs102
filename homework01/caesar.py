@@ -1,4 +1,4 @@
-def encrypt_caesar(plaintext):
+def encrypt_caesar(plaintext: str) -> str: 
     """
     >>> encrypt_caesar("PYTHON")
     'SBWKRQ'
@@ -9,7 +9,6 @@ def encrypt_caesar(plaintext):
     >>> encrypt_caesar("")
     ''
     """
-    # PUT YOUR CODE HERE
     word = [i for i in plaintext]
     ciphertext = ''
     for i in range(len(word)):
@@ -22,8 +21,9 @@ def encrypt_caesar(plaintext):
     return ciphertext
 
 
-def decrypt_caesar(ciphertext):
+def decrypt_caesar(ciphertext: str) -> str:
     """
+    Decrypt the message with Caesar cipher
     >>> decrypt_caesar("SBWKRQ")
     'PYTHON'
     >>> decrypt_caesar("sbwkrq")
@@ -33,7 +33,6 @@ def decrypt_caesar(ciphertext):
     >>> decrypt_caesar("")
     ''
     """
-    # PUT YOUR CODE HERE
     word = [i for i in ciphertext]
     plaintext = ''
     for i in range(len(word)):

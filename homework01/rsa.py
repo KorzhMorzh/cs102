@@ -1,7 +1,7 @@
 import random
 
 
-def is_prime(n):
+def is_prime(n: int) -> bool:
     """
     >>> is_prime(2)
     True
@@ -21,7 +21,7 @@ def is_prime(n):
         return False
 
 
-def gcd(a, b):
+def gcd(a: int, b: int) -> int:
     """
     >>> gcd(12, 15)
     3
@@ -36,7 +36,7 @@ def gcd(a, b):
     return a
 
 
-def multiplicative_inverse(e, phi):
+def multiplicative_inverse(e: int, phi: int) -> int:
     """
     >>> multiplicative_inverse(7, 40)
     23
@@ -61,7 +61,7 @@ def multiplicative_inverse(e, phi):
     return d
 
 
-def generate_keypair(p, q):
+def generate_keypair(p: int, q: int) -> tuple:
     if not (is_prime(p) and is_prime(q)):
         raise ValueError('Both numbers must be prime.')
     elif p == q:
