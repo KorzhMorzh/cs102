@@ -1,3 +1,6 @@
+import random
+
+
 def read_sudoku(filename: str) -> list:
     """ Прочитать Судоку из указанного файла """
     digits = [c for c in open(filename).read() if c in '123456789.']
@@ -45,7 +48,7 @@ def get_row(values: list, pos: tuple) -> list:
     ['.', '8', '9']
     """
     i = int(pos[0])
-    row = values[i]
+    row = list(values[i])
     return row
 
 
@@ -168,10 +171,10 @@ def find_possible_values(grid: list, pos: tuple) -> list:
     return possible_values
 
 
-def solve(grid: list) -> list:
+def solve(grid: list):
     """ Решение пазла, заданного в grid """
     """ 
-    >>> grid = read_sudoku('puzzle1.txt')
+    >>> grid = read_sudoku('puzzle1.txt'    )
     >>> solve(grid)
     [['5', '3', '4', '6', '7', '8', '9', '1', '2'], ['6', '7', '2', '1', '9', '5', '3', '4', '8'], ['1', '9', '8', '3', 
     '4', '2', '5', '6', '7'], ['8', '5', '9', '7', '6', '1', '4', '2', '3'], ['4', '2', '6', '8', '5', '3', '7', '9', 
@@ -185,7 +188,7 @@ def solve(grid: list) -> list:
     possible_values = find_possible_values(grid, pos)
     for value in possible_values:
         grid[i][j] = value
-        solution: list = solve(grid)
+        solution = solve(grid)
         if solution:
             return solution
     grid[i][j] = '.'
@@ -209,3 +212,38 @@ def check_solution(solution: list) -> bool:
             if block != check:
                 return False
     return True
+
+
+def generate_sudoku(n: int) -> list:
+    """ Генерация судоку заполненного на N элементов
+    >>> grid = generate_sudoku(40)
+    >>> sum(1 for row in grid for e in row if e == '.')
+    41
+    >>> solution = solve(grid)
+    >>> check_solution(solution)
+    True
+    >>> grid = generate_sudoku(1000)
+    >>> sum(1 for row in grid for e in row if e == '.')
+    0
+    >>> solution = solve(grid)
+    >>> check_solution(solution)
+    True
+    >>> grid = generate_sudoku(0)
+    >>> sum(1 for row in grid for e in row if e == '.')
+    81
+    >>> solution = solve(grid)
+    >>> check_solution(solution)
+    True
+    """
+    grid = []
+    for i in range(9):
+        grid.append(['.']*9)
+    grid = solve(grid)
+    n = 81 - min(81, max(0, n))
+    while n:
+        i = random.randint(0, 8)
+        j = random.randint(0, 8)
+        if grid[i][j] != '.':
+            grid[i][j] = '.'
+            n -= 1
+    return grid
