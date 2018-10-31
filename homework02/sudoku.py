@@ -1,3 +1,4 @@
+from typing import Union
 import random
 
 
@@ -171,7 +172,7 @@ def find_possible_values(grid: list, pos: tuple) -> list:
     return possible_values
 
 
-def solve(grid: list):
+def solve(grid: list) -> Union[list, None]:
     """ Решение пазла, заданного в grid """
     """ 
     >>> grid = read_sudoku('puzzle1.txt'    )
@@ -214,7 +215,7 @@ def check_solution(solution: list) -> bool:
     return True
 
 
-def generate_sudoku(n: int) -> list:
+def generate_sudoku(n: int) -> Union[list, None]:
     """ Генерация судоку заполненного на N элементов
     >>> grid = generate_sudoku(40)
     >>> sum(1 for row in grid for e in row if e == '.')
@@ -235,10 +236,10 @@ def generate_sudoku(n: int) -> list:
     >>> check_solution(solution)
     True
     """
-    grid = []
+    grid: list = []
     for i in range(9):
         grid.append(['.']*9)
-    grid = solve(grid)
+    gridd = solve(grid)
     n = 81 - min(81, max(0, n))
     while n:
         i = random.randint(0, 8)
@@ -246,4 +247,4 @@ def generate_sudoku(n: int) -> list:
         if grid[i][j] != '.':
             grid[i][j] = '.'
             n -= 1
-    return grid
+    return gridd
