@@ -1,4 +1,5 @@
 import pygame
+import random
 from pygame.locals import *
 
 
@@ -44,20 +45,32 @@ class GameOfLife:
             clock.tick(self.speed)
         pygame.quit()
 
+    def cell_list(self, randomize=False):
+        """
+        Создание списка клеток.
 
-if __name__ == '__main__':
+        Клетка считается живой, если ее значение равно 1.
+        В противном случае клетка считается мертвой, то
+        есть ее значение равно 0.
+        Если параметр randomize = True, то создается список, где
+        каждая клетка может быть равновероятно живой или мертвой.
+        """
+        clist = []
+        for i in range(self.cell_height):
+            clist.append([])
+            for j in range(self.cell_width):
+                if randomize:
+                    clist[i].append(random.randint(0, 1))
+                else:
+                    clist = [
+                        [0, 1, 0],
+                        [0, 1, 0],
+                        [0, 1, 0],
+                        ]
+        return clist
+
+
+'''if __name__ == '__main__':
     game = GameOfLife(320, 240, 20)
     game.run()
-
-
-def cell_list(self, randomize=False):
-    """
-    Создание списка клеток.
-
-    Клетка считается живой, если ее значение равно 1.
-    В противном случае клетка считается мертвой, то
-    есть ее значение равно 0.
-    Если параметр randomize = True, то создается список, где
-    каждая клетка может быть равновероятно живой или мертвой.
-    """
-    pass
+'''
