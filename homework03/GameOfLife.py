@@ -4,7 +4,8 @@ from pygame.locals import *
 
 
 class GameOfLife:
-    def __init__(self, width: int = 640, height: int = 480, cell_size: int = 10, speed: int = 10):
+    def __init__(self, width: int = 640, height: int = 480,
+                 cell_size: int = 10, speed: int = 10):
         self.width = width
         self.height = height
         self.cell_size = cell_size
@@ -78,11 +79,15 @@ class GameOfLife:
             x = 0
             for j in i:
                 if j:
-                    j = pygame.draw.rect(self.screen, pygame.Color('green'),
-                                         (x, y, self.cell_size - 1, self.cell_size - 1))
+                    j = pygame.draw.rect(self.screen,
+                                         pygame.Color('green'),
+                                         (x, y, self.cell_size - 1,
+                                          self.cell_size - 1))
                 else:
-                    j = pygame.draw.rect(self.screen, pygame.Color('white'),
-                                         (x, y, self.cell_size - 1, self.cell_size - 1))
+                    j = pygame.draw.rect(self.screen,
+                                         pygame.Color('white'),
+                                         (x, y, self.cell_size - 1,
+                                          self.cell_size - 1))
                 x += self.cell_size
             y += self.cell_size
         return rects
@@ -96,32 +101,37 @@ class GameOfLife:
         """
         row, col = cell
         neighbours = []
-        if (row != 0) & (row != self.cell_height - 1) & (col != 0) & (col != self.cell_width - 1):  # Клетки, не с краю
+        if (row != 0) & (row != self.cell_height - 1) & (col != 0) \
+                & (col != self.cell_width - 1):  # Клетки, не с краю
             for i in range(-1, 2):
                 for j in range(-1, 2):
                     if (i == 0) & (j == 0):
                         continue
                     else:
                         neighbours.append(self.clist[row + i][col + j])
-        elif (row == 0) & (col != 0) & (col != self.cell_width - 1):  # Первая строка без углов
+        elif (row == 0) & (col != 0) & (col != self.cell_width - 1):
+            # Первая строка без углов
             for i in range(0, 2):
                 for j in range(-1, 2):
                     if (i == 0) & (j == 0):
                         continue
                     neighbours.append(self.clist[row + i][col + j])
-        elif (row == self.cell_height - 1) & (col != 0) & (col != self.cell_width - 1):  # последняя строка без углов
+        elif (row == self.cell_height - 1) & (col != 0) & \
+                (col != self.cell_width - 1):  # последняя строка без углов
             for i in range(-1, 1):
                 for j in range(-1, 2):
                     if (i == 0) & (j == 0):
                         continue
                     neighbours.append(self.clist[row + i][col + j])
-        elif (col == 0) & (row != 0) & (row != self.cell_height - 1):  # Первая колонка без углов
+        elif (col == 0) & (row != 0) & (row != self.cell_height - 1):
+            # Первая колонка без углов
             for i in range(-1, 2):
                 for j in range(0, 2):
                     if (i == 0) & (j == 0):
                         continue
                     neighbours.append(self.clist[row + i][col + j])
-        elif (col == self.cell_width - 1) & (row != 0) & (row != self.cell_height - 1):
+        elif (col == self.cell_width - 1) & (row != 0) \
+                & (row != self.cell_height - 1):
             for i in range(-1, 2):
                 for j in range(-1, 1):
                     if (i == 0) & (j == 0):
