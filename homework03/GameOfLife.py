@@ -74,9 +74,9 @@ class GameOfLife:
         Отображение списка клеток 'rects' с закрашиванием их в
         соответствующе цвета
         """
-        y = 0
+        y = 1
         for i in rects:
-            x = 0
+            x = 1
             for j in i:
                 if j:
                     j = pygame.draw.rect(self.screen,
@@ -192,5 +192,5 @@ class GameOfLife:
 
 
 if __name__ == '__main__':
-    game = GameOfLife(400, 400, 10)
+    game = GameOfLife(360, 360, 40)
     game.run()
