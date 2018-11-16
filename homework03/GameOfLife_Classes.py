@@ -6,7 +6,8 @@ from copy import deepcopy
 
 class GameOfLife:
 
-    def __init__(self, width: int =640, height: int =480, cell_size: int=10, speed: int=10):
+    def __init__(self, width: int = 640, height: int = 480,
+                 cell_size: int = 10, speed: int = 10):
         self.width = width
         self.height = height
         self.cell_size = cell_size
@@ -66,15 +67,19 @@ class GameOfLife:
                 x = j * self.cell_size + 1
                 y = i * self.cell_size + 1
                 if self.clist.grid[i][j].is_alive():
-                    pygame.draw.rect(game.screen, pygame.Color('green'), (x, y, game.cell_size - 1, game.cell_size - 1))
+                    pygame.draw.rect(game.screen, pygame.Color('green'),
+                                     (x, y, game.cell_size - 1,
+                                      game.cell_size - 1))
                 else:
-                    pygame.draw.rect(game.screen, pygame.Color('white'), (x, y, game.cell_size - 1, game.cell_size - 1))
+                    pygame.draw.rect(game.screen, pygame.Color('white'),
+                                     (x, y, game.cell_size - 1,
+                                      game.cell_size - 1))
         return self
 
 
 class Cell:
 
-    def __init__(self, row: int, col: int, state: bool=False):
+    def __init__(self, row: int, col: int, state: bool = False):
         self.state = state
         self.row = row
         self.col = col
@@ -85,7 +90,7 @@ class Cell:
 
 class CellList:
 
-    def __init__(self, nrows: int, ncols: int, randomize: bool=False):
+    def __init__(self, nrows: int, ncols: int, randomize: bool = False):
         self.nrows = nrows
         self.ncols = ncols
         self.grid: list = []
@@ -101,26 +106,30 @@ class CellList:
         row = cell.row
         col = cell.col
         neighbours = []
-        if (row != 0) & (row != self.nrows - 1) & (col != 0) & (col != self.ncols - 1):  # Клетки, не с краю
+        if (row != 0) & (row != self.nrows - 1) & (col != 0) & \
+                (col != self.ncols - 1):  # Клетки, не с краю
             for i in range(-1, 2):
                 for j in range(-1, 2):
                     if (i == 0) & (j == 0):
                         continue
                     else:
                         neighbours.append(self.grid[row + i][col + j])
-        elif (row == 0) & (col != 0) & (col != self.ncols - 1):  # Первая строка без углов
+        elif (row == 0) & (col != 0) & (col != self.ncols - 1):
+            # Первая строка без углов
             for i in range(0, 2):
                 for j in range(-1, 2):
                     if (i == 0) & (j == 0):
                         continue
                     neighbours.append(self.grid[row + i][col + j])
-        elif (row == self.nrows - 1) & (col != 0) & (col != self.ncols - 1):  # последняя строка без углов
+        elif (row == self.nrows - 1) & (col != 0) & (col != self.ncols - 1):
+            # последняя строка без углов
             for i in range(-1, 1):
                 for j in range(-1, 2):
                     if (i == 0) & (j == 0):
                         continue
                     neighbours.append(self.grid[row + i][col + j])
-        elif (col == 0) & (row != 0) & (row != self.nrows - 1):  # Первая колонка без углов
+        elif (col == 0) & (row != 0) & (row != self.nrows - 1):
+            # Первая колонка без углов
             for i in range(-1, 2):
                 for j in range(0, 2):
                     if (i == 0) & (j == 0):
@@ -196,12 +205,14 @@ class CellList:
         grid = []
         with open(filename) as f:
             for i, line in enumerate(f):
-                grid.append([Cell(i, j, bool(int(c))) for j, c in enumerate(line) if c in '01'])
+                grid.append([Cell(i, j,
+                                  bool(int(c))) for j, c in enumerate(line)
+                             if c in '01'])
         celllist = cls(len(grid), len(grid[0]), False)
         celllist.grid = grid
         return celllist
 
 
 if __name__ == '__main__':
-    game = GameOfLife(340, 340, 10)
+    game = GameOfLife(360, 360, 40)
     game.run()
