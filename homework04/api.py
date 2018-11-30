@@ -1,7 +1,8 @@
 import requests
 import time
-from typing import List
 import config
+import random
+import math
 
 
 def get(url: str, params: dict = {}, timeout: int = 5,
@@ -20,8 +21,10 @@ def get(url: str, params: dict = {}, timeout: int = 5,
         except requests.exceptions.RequestException:
             if i >= max_retries - 1:
                 raise
+            # temp = min(timeout, backoff_factor * (2 ** i))
+            # sleep = temp/2 + random.uniform(0, temp/2)
             backoff = backoff_factor * (2 ** i)
-            time.sleep(backoff)
+            time.sleep(backoff_factor)
 
 
 def get_friends(user_id: int, fields: str):
