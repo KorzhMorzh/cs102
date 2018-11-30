@@ -24,7 +24,7 @@ def get(url: str, params: dict = {}, timeout: int = 5,
             # temp = min(timeout, backoff_factor * (2 ** i))
             # sleep = temp/2 + random.uniform(0, temp/2)
             backoff = backoff_factor * (2 ** i)
-            time.sleep(backoff_factor)
+            time.sleep(backoff)
 
 
 def get_friends(user_id: int, fields: str):
