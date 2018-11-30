@@ -72,12 +72,35 @@ def plot_graph(graph: int):
                         # Fruchterman-Reingold force-directed algorithm
                         # алгоритм компоновки
                         maxiter=1000,
+                        # the maximum distance to move a vertex in an
+                        # iteration. The default is the number of vertices
                         area=n ** 3,
-                        repulserad=n ** 3)}
+                        # he area of the square on which the vertices will
+                        #  be placed. The default is the square of the number
+                        # of vertices.
+                        repulserad=n ** 3
+                        # determines the radius at which vertex-vertex
+                        # repulsion cancels out attraction of adjacent
+                        # vertices. The default is the number of vertices^3.
+                    )}
     g.simplify(multiple=True, loops=True)
     # Отрисовываем граф
     clusters = g.community_multilevel()
+    # Finds the community structure of the graph according
+    # to the multilevel algorithm of Blondel et al.
+    '''
+    Это восходящий алгоритм: первоначально каждая вершина принадлежит 
+    отдельному сообществу, а вершины перемещаются между сообществами 
+    итеративно таким образом, чтобы максимизировать локальный вклад 
+    вершин в общий показатель модульности. Когда достигнут консенсус 
+    (т. Е. Ни один шаг не увеличит оценку модульности), каждое сообщество 
+    исходного графа сократится до одной вершины (при сохранении общего 
+    веса краев инцидентов), и процесс продолжит на следующем уровне. 
+    Алгоритм останавливается, когда невозможно увеличить модульность 
+    после сжатия сообществ до вершин.
+    '''
     pal = igraph.drawing.colors.ClusterColoringPalette(len(clusters))
+    # A palette suitable for coloring vertices when plotting a clustering.
     g.vs['color'] = pal.get_many(clusters.membership)
     plot(g, **visual_style)
 
