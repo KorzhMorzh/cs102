@@ -6,7 +6,6 @@ import datetime
 from time import sleep
 from typing import Union, Tuple
 
-
 # Создание бота с указанным токеном доступа
 bot: telebot = telebot.TeleBot(config.access_token)
 cache: dict = {}
@@ -91,7 +90,7 @@ def get_schedule(message: telebot.types.Message) -> telebot.types.Message:
         resp = ''
         for time, location, room, lesson in \
                 zip(times_lst, locations_lst, rooms_lst, lessons_lst):
-            resp += '<b>{}</b>, {}, {}, {}\n'.\
+            resp += '<b>{}</b>, {}, {}, {}\n'. \
                 format(time, location, room, lesson)
         return bot.send_message(message.chat.id, resp, parse_mode='HTML')
 
@@ -121,11 +120,11 @@ def get_all_schedule(message: telebot.types.Message) -> telebot.types.Message:
             else:
                 try:
                     times_lst, locations_lst, room_lst, \
-                     lessons_lst = parse_schedule(web_page, week_list[i])
+                        lessons_lst = parse_schedule(web_page, week_list[i])
                     for time, location, room, lesson in \
                             zip(times_lst, locations_lst,
                                 room_lst, lessons_lst):
-                        resp += '<b>{}</b>, {}, {}, {}\n'.\
+                        resp += '<b>{}</b>, {}, {}, {}\n'. \
                             format(time, location, room, lesson)
                 except TypeError:
                     pass
@@ -186,11 +185,11 @@ def get_tomorrow(message: telebot.types.Message) -> telebot.types.Message:
                                 parse_mode='HTML')
     else:
         times_lst, locations_lst, rooms_lst, \
-         lessons_lst = parse_schedule(web_page, day)
+            lessons_lst = parse_schedule(web_page, day)
         resp = ''
         for time, location, room, lession in \
                 zip(times_lst, locations_lst, rooms_lst, lessons_lst):
-            resp += '<b>{}</b>, {}, {}, {}\n'.\
+            resp += '<b>{}</b>, {}, {}, {}\n'. \
                 format(time, location, room, lession)
         return bot.send_message(message.chat.id, resp, parse_mode='HTML')
 
@@ -258,5 +257,11 @@ def get_near_lesson(message: telebot.types.Message) -> telebot.types.Message:
         now = 0
 
 
-if __name__ == '__main__':
-    bot.polling(none_stop=True)
+'''if __name__ == '__main__':
+    bot.polling(none_stop=True)'''
+
+while True:
+    try:
+        bot.polling(none_stop=True)
+    except Exception:
+        sleep(5)
