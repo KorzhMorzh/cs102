@@ -22,11 +22,11 @@ class NaiveBayesClassifier:
             labels_count.update({label: 0})
         for i, content in enumerate(zip(X, y)):
             for word in content[0].split(" "):
-                if not self.freq_table.get(word):
-                    self.freq_table.update({word: [0 for _i in self.labels]})
-                    self.freq_table[word][self.labels.index(content[1])] += 1
+                if not self.freq_table.get(word.lower()):
+                    self.freq_table.update({word.lower(): [0 for _i in self.labels]})
+                    self.freq_table[word.lower()][self.labels.index(content[1])] += 1
                 else:
-                    self.freq_table[word][self.labels.index(content[1])] += 1
+                    self.freq_table[word.lower()][self.labels.index(content[1])] += 1
                 labels_count[content[1]] += 1
         d = len(self.freq_table)
         for i in self.labels:
@@ -42,16 +42,16 @@ class NaiveBayesClassifier:
     def predict(self, X):
         """ Perform classification on an array of test vectors X. """
         y = []
-        for title in X:
-            predict = []
-            for i in range(len(self.labels)):
-                logs_sum = np.log(self.labels_prob[i])
-                for word in title.split(" "):
-                    if self.freq_table.get(word):
-                        logs_sum += np.log(self.likelihood_table[word][i])
-                predict.append(logs_sum)
-            return self.labels[predict.index(max(predict))]
-        '''y.append(self.labels[predict.index(max(predict))])
+        predict = [0 for _i in range(len(self.labels))]
+        for i in range(len(self.labels)):
+            logs_sum = np.log(self.labels_prob[i])
+            for word in X.split(" "):
+                if self.freq_table.get(word.lower()):
+                    logs_sum += np.log(self.likelihood_table[word.lower()][i])
+            predict[i] = logs_sum
+        return self.labels[predict.index(max(predict))]
+
+    '''y.append(self.labels[predict.index(max(predict))])
         return y'''
 
     def score(self, X_test, y_test):
