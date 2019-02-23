@@ -1,8 +1,8 @@
 import numpy as np
-import csv
+''''import csv
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.pipeline import Pipeline
-from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.feature_extraction.text import TfidfVectorizer'''
 
 
 class NaiveBayesClassifier:
@@ -64,7 +64,7 @@ class NaiveBayesClassifier:
         part /= len(X_test)
         return part
 
-
+'''
 if __name__ == "__main__":
     with open("data/SMSSpamCollection (2)", encoding='utf-8') as f:
         data = list(csv.reader(f, delimiter="\t"))
@@ -91,4 +91,4 @@ if __name__ == "__main__":
     ])
 
     model.fit(X_train, y_train)
-    print(model.score(X_test, y_test))
+    print(model.score(X_test, y_test))'''
