@@ -39,13 +39,9 @@ def get_news(url, n_pages):
     for i in range(1, n_pages + 1):
         links_list.append(extract_next_page(url, i))
         print("Extracted page ", i)
-    for i in range(len(links_list)):
-        for j in range(len(links_list[i])):
-            q += 1
-            current_url = url + '/{news}'.format(
-
-                news=links_list[i][j])
-            news_list.append(extract_news(current_url))
-            print("Collected news ", q)
-
+    news_list = [
+        extract_news(f"{url}/{news}")
+        for links in links_list
+        for news in links
+    ]
     return news_list

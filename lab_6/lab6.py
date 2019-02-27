@@ -17,8 +17,6 @@ def update_news():
     bd_labels = []
     for title in titles:
         bd_labels.append(title[0])
-    print(bd_labels)
-
     for current_new in upd_news:
         if current_new['title'] not in bd_labels:
             news = db.News(title=current_new['title'],
@@ -64,14 +62,11 @@ def get_recommendations():
         y.append(row.label)
     bayesclassifier = bayes.NaiveBayesClassifier()
     bayesclassifier.fit(x, y)
-    s.commit()
-    s = db.session()
     rows = s.query(db.News).filter(db.News.label == None).all()
-    for row in rows:
-        try:
-            row.label = bayesclassifier.predict(row.title)
-        except:
-            pass
+    X = [row.title for row in rows]
+    y = bayesclassifier.predict(X)
+    for i, row in enumerate(rows):
+            row.label = y[i]
     good, maybe, never = [], [], []
     for row in rows:
         if row.label == 'good':
@@ -86,24 +81,26 @@ def get_recommendations():
 if __name__ == '__main__':
     run(host='localhost', port=8080)
 
-'''
-news_list_ = scraputils.get_news('https://www.itnews.com.au', 50)
-q = 0
-for k in news_list_:
-    s = db.session()
-    news_ = db.News(title=k.get('title'),
-                    author=k.get('author'),
-                    url=k.get('url'),
-                    comments=k.get('comments')
-                    )
-    s.add(news_)
-    s.commit()
-    q += 1
-    print("added news ", q)'''
 
-'''
-s = db.session()
-rows = s.query(db.News).filter(db.News.label != None).all()
-for row in rows:
-    row.label = None
-s.commit()'''
+def add_db():  # Добавление 1000 новостей
+    news_list_ = scraputils.get_news('https://www.itnews.com.au', 50)
+    q = 0
+    for k in news_list_:
+        s = db.session()
+        news_ = db.News(title=k.get('title'),
+                        author=k.get('author'),
+                        url=k.get('url'),
+                        comments=k.get('comments')
+                    )
+        s.add(news_)
+        s.commit()
+        q += 1
+        print("added news ", q)
+
+
+def clean_label():  # Вспомогательная функция
+    s = db.session()
+    rows = s.query(db.News).filter(db.News.label != None).all()
+    for row in rows:
+        row.label = None
+    s.commit()
