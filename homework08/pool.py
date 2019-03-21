@@ -75,5 +75,5 @@ if __name__ == '__main__':
     pool = ProcessPool(min_workers=2, max_workers=10, mem_usage='1Gb')
     m = 50
     big_data = [random.randint(-m * m, m * m) for i in range(m)]
-    pool.max_memory(heavy_computation, big_data[0])
+    pool.max_memory(heavy_computation, max(big_data))
     result = pool.map(heavy_computation, big_data)
