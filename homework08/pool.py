@@ -9,10 +9,27 @@ class ProcessPool:
     def __init__(self, min_workers, max_workers, mem_usage):
         self.min_workers = min_workers
         self.max_workers = max_workers
-        self.mem_usage = mem_usage
         self.max_memory = 0
+        if min_workers > max_workers:
+            raise Exception("Минимальное кол-во процессов не "
+                            "может быть больше максимального")
+        if ('gb' in mem_usage.lower()) or ('mb' in mem_usage.lower()) \
+                or ('kb' in mem_usage.lower()) or ("b" in mem_usage.lower()):
+            try:
+                self.mem_usage = int(mem_usage.lower().split('gb')[0]) * 1000
+            except ValueError:
+                try:
+                    self.mem_usage = int(mem_usage.lower().split('mb')[0])
+                except ValueError:
+                    try:
+                        self.mem_usage = int(mem_usage.lower().split('kb')[0]) / 1000
+                    except ValueError:
+                        self.mem_usage = int(mem_usage.lower().split('b')[0]) / 1000 / 1000
+        else:
+            raise Exception("Некорректное значение памяти")
 
     def map(self, func, iterable):
+        q = Queue()
         begin = time.time()
         max_memory_ = 0
         start_memory = psutil.virtual_memory().used
@@ -27,20 +44,17 @@ class ProcessPool:
             if not p.is_alive():
                 end = time.time()
                 p.join()
+                p.terminate()
                 print("Время обработки 1 чанка данных одним процессом: ",
                       int(end - begin))
-                self.max_memory = int(max_memory_ / 1024 / 1024)
+                self.max_memory = int(max_memory_ / 1000 / 1000)
                 break
         processes = []
-        amount_process = int(int(self.mem_usage.split('Gb')[0])
-                             * 1024 / self.max_memory)
-        if self.max_memory > int(self.mem_usage.split('Gb')[0])*1024:
-            print("Процесс занимает больше памяти, чем возможно")
-            return 0
+        amount_process = int(self.mem_usage / self.max_memory)
+        if self.max_memory > self.mem_usage:
+            raise Exception("Процесс занимает больше памяти, чем возможно")
         if amount_process < self.min_workers:
-            print('Количество возможных процессов меньше '
-                  'минимального количества')
-            return 0
+            raise Exception('Количество возможных процессов меньше минимального количества')
         elif amount_process > self.max_workers:
             amount_process = self.max_workers
         for i in iterable:
@@ -60,6 +74,7 @@ class ProcessPool:
                     break
             for process in processes:
                 process.join()
+                process.terminate()
 
 
 def heavy_computation(data_chunk):
@@ -69,8 +84,7 @@ def heavy_computation(data_chunk):
 
 
 if __name__ == '__main__':
-    q = Queue()
-    pool = ProcessPool(min_workers=2, max_workers=10, mem_usage='1Gb')
+    pool = ProcessPool(min_workers=2, max_workers=10, mem_usage='100mb')
     m = 50
     big_data = [random.randint(-m * m, m * m) for i in range(m)]
     result = pool.map(heavy_computation, big_data)
