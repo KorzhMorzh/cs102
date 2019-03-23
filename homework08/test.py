@@ -50,6 +50,17 @@ class TestPool(unittest.TestCase):
         result = process.map(heavy_computation, self.data())
         self.assertEqual(3, result[0])
 
+    def test_mem_usage(self):
+        process = ProcessPool(min_workers=1, max_workers=10, mem_usage='100mb')
+        result = process.map(heavy_computation, self.data())
+        self.assertLessEqual(result[0]*result[1], 100)
+
+    def test_qsize_less_amount_process(self):
+        process = ProcessPool(min_workers=1, max_workers=10, mem_usage='150mb')
+        data = self.data()
+        result = process.map(heavy_computation, data)
+        self.assertEqual(result[0], len(data))
+
 
 if __name__ == '__main__':
     unittest.main()
