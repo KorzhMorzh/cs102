@@ -49,6 +49,7 @@ class ProcessPool:
                       int(end - begin))
                 self.max_memory = int(max_memory_ / 1000 / 1000)
                 break
+
         processes = []
         amount_process = int(self.mem_usage / self.max_memory)
         if self.max_memory > self.mem_usage:
@@ -61,6 +62,8 @@ class ProcessPool:
             q.put(i)
         begin = time.time()
         length = q.qsize()
+        if length <= amount_process:
+            amount_process = length
         while not q.empty():
             for _i in range(amount_process):
                 data = q.get()
@@ -75,6 +78,7 @@ class ProcessPool:
             for process in processes:
                 process.join()
                 process.terminate()
+        return amount_process, self.max_memory
 
 
 def heavy_computation(data_chunk):
