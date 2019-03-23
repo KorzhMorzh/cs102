@@ -5,11 +5,11 @@ import random
 
 class TestPool(unittest.TestCase):
     def data(self):
-        m = 50
+        m = 5
         big_data = [random.randint(-m * m, m * m) for _i in range(m)]
         return big_data
 
-    def test_amount_of_process(self):
+    def test_memory(self):
         process_gb = ProcessPool(min_workers=2, max_workers=10, mem_usage='1Gb')
         process_mb = ProcessPool(min_workers=2, max_workers=10, mem_usage='100mb')
         process_kb = ProcessPool(min_workers=2, max_workers=10, mem_usage='1Kb')
@@ -26,7 +26,7 @@ class TestPool(unittest.TestCase):
                         in str(context.exception))
 
     def test_amount_processes_less_than_min_workers(self):
-        process = ProcessPool(min_workers=500, max_workers=510, mem_usage='50mb')
+        process = ProcessPool(min_workers=5000, max_workers=5100, mem_usage='150mb')
         data = self.data()
         with self.assertRaises(Exception) as context:
             process.map(heavy_computation, data)
@@ -44,3 +44,12 @@ class TestPool(unittest.TestCase):
             ProcessPool(min_workers=10, max_workers=9, mem_usage='1gb')
         self.assertTrue('Минимальное кол-во процессов не может быть больше максимального'
                         in str(context.exception))
+
+    def test_max_less_possible(self):
+        process = ProcessPool(min_workers=1, max_workers=3, mem_usage='1gb')
+        result = process.map(heavy_computation, self.data())
+        self.assertEqual(3, result[0])
+
+
+if __name__ == '__main__':
+    unittest.main()
