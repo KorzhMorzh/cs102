@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block content %}
+{% if user.is_authenticated %}
+<canvas id="gP">HTML 5 не поддерживется</canvas>
+
+<body bgcolor="aqua">
+
+<canvas {
+    padding: 0;
+    margin: auto;
+    display: block;
+    width: 800px;
+    height: 600px;
+
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    position: absolute;}, align='center'>
+<script type="text/javascript" , src="{% static 'snake/snake.js'%}">
+
+</script>
+</canvas>
+
+</body>
+{% else %}
+Login to play
+{% endif%}
+{% endblock %}
