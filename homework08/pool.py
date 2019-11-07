@@ -3,6 +3,7 @@ import psutil
 import time
 import math
 import random
+import threading
 
 
 class ProcessPool:
@@ -10,9 +11,12 @@ class ProcessPool:
         self.min_workers = min_workers
         self.max_workers = max_workers
         self.max_memory = 0
+        self.convert_memory(mem_usage)
         if min_workers > max_workers:
             raise Exception("Минимальное кол-во процессов не "
                             "может быть больше максимального")
+
+    def convert_memory(self, mem_usage):
         if ('gb' in mem_usage.lower()) or ('mb' in mem_usage.lower()) \
                 or ('kb' in mem_usage.lower()) or ("b" in mem_usage.lower()):
             try:
@@ -30,26 +34,12 @@ class ProcessPool:
 
     def map(self, func, iterable):
         q = Queue()
-        begin = time.time()
-        max_memory_ = 0
-        start_memory = psutil.virtual_memory().used
-        memory_usage_refresh = .005
-        p = Process(target=func, args=(max(iterable),))
+        p = Process(target=func, name='test process', args=(iterable[0],))
         p.start()
-        while 1:
-            time.sleep(memory_usage_refresh)
-            delta_mem = psutil.virtual_memory().used - start_memory
-            if delta_mem > max_memory_:
-                max_memory_ = delta_mem
-            if not p.is_alive():
-                end = time.time()
-                p.join()
-                p.terminate()
-                print("Время обработки 1 чанка данных одним процессом: ",
-                      int(end - begin))
-                self.max_memory = int(max_memory_ / 1000 / 1000)
-                break
-
+        p_m = threading.Thread(target=self.max_memory_usage, name='test mem', args=(p.pid,))
+        p_m.start()
+        p.join()
+        p_m.join()
         processes = []
         amount_process = int(self.mem_usage / self.max_memory)
         if self.max_memory > self.mem_usage:
@@ -60,7 +50,7 @@ class ProcessPool:
             amount_process = self.max_workers
         for i in iterable:
             q.put(i)
-        begin = time.time()
+        # begin = time.time()
         length = q.qsize()
         if length <= amount_process:
             amount_process = length
@@ -71,18 +61,29 @@ class ProcessPool:
                 processes.append(process)
                 process.start()
                 if q.empty():
-                    end = time.time()
-                    print("Время обработки {} чанков данных {} процессами:"
-                          .format(length, amount_process), int(end - begin))
+                    # end = time.time()
+                    '''print("Время обработки {} чанков данных {} процессами:"
+                          .format(length, amount_process), int(end - begin))'''
                     break
             for process in processes:
                 process.join()
                 process.terminate()
         return amount_process, self.max_memory
 
+    def max_memory_usage(self, pid):
+        p_psutil = psutil.Process(pid)
+        mem_list = []
+        while psutil.pid_exists(pid):
+            try:
+                mem_list.append(p_psutil.memory_info().rss // 1000000)
+            except:
+                pass
+            time.sleep(0.01)
+        self.max_memory = max(mem_list)
+
 
 def heavy_computation(data_chunk):
-    for i in range(4534545):
+    for i in range(456465):
         data_chunk = math.pow(data_chunk, i) * i
     return data_chunk
 

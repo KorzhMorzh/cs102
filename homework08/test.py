@@ -10,6 +10,7 @@ class TestPool(unittest.TestCase):
         return big_data
 
     def test_memory(self):
+        """Память конвертируется в мб"""
         process_gb = ProcessPool(min_workers=2, max_workers=10, mem_usage='1Gb')
         process_mb = ProcessPool(min_workers=2, max_workers=10, mem_usage='100mb')
         process_kb = ProcessPool(min_workers=2, max_workers=10, mem_usage='1Kb')
@@ -19,6 +20,7 @@ class TestPool(unittest.TestCase):
                           process_kb.mem_usage, process_b.mem_usage])
 
     def test_overflow_memory(self):
+        """Отлавливает переполнение памяти"""
         process = ProcessPool(min_workers=2, max_workers=10, mem_usage='1Kb')
         with self.assertRaises(Exception) as context:
             process.map(heavy_computation, self.data())
@@ -26,6 +28,7 @@ class TestPool(unittest.TestCase):
                         in str(context.exception))
 
     def test_amount_processes_less_than_min_workers(self):
+        """Количество возможных процессов меньше мин. кол-ва"""
         process = ProcessPool(min_workers=5000, max_workers=5100, mem_usage='150mb')
         data = self.data()
         with self.assertRaises(Exception) as context:
@@ -34,6 +37,7 @@ class TestPool(unittest.TestCase):
         self.assertTrue(u)
 
     def test_incorrect_memory(self):
+        """Некорректное значение памяти"""
         with self.assertRaises(Exception) as context:
             ProcessPool(min_workers=2, max_workers=10, mem_usage='1')
         self.assertTrue('Некорректное значение памяти'
@@ -46,6 +50,7 @@ class TestPool(unittest.TestCase):
                         in str(context.exception))
 
     def test_max_less_possible(self):
+        """Максимальная память меньше возможной"""
         process = ProcessPool(min_workers=1, max_workers=3, mem_usage='1gb')
         result = process.map(heavy_computation, self.data())
         self.assertEqual(3, result[0])
